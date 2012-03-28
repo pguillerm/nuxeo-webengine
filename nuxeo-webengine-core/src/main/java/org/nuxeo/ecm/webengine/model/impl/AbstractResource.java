@@ -238,6 +238,21 @@ public abstract class AbstractResource<T extends ResourceType> implements Resour
     public Template getTemplate(String fileName) {
         return new Template(this, getModule().getFile(fileName));
     }
+    
+    /**
+     * Allow to get a freemarker template. For use it, we will create an enum
+     * who implements the TemplateViewId interface.
+     *
+     * @param viewId enum implementation of TemplateViewId
+     * @return the freemarker template
+     * @see org.nuxeo.ecm.webengine.model.impl.TemplateViewId
+     */
+    public Template getTemplate(TemplateViewId viewId){
+        if(viewId==null){
+            throw new NullPointerException("freemarker view id musn't be null");
+        }
+        return getTemplate(viewId.getViewID());
+    }
 
     public boolean checkGuard(String guard) throws ParseException {
         return PermissionService.parse(guard).check(this);
