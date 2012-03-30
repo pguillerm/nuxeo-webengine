@@ -32,6 +32,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 
 import org.nuxeo.ecm.webengine.WebException;
+import org.nuxeo.ecm.webengine.model.impl.ParameterId;
 import org.nuxeo.ecm.webengine.scripting.ScriptFile;
 
 /**
@@ -77,13 +78,34 @@ public class Template {
     }
 
     public Template arg(String key, Object value) {
-        if (args == null) {
-            args = new HashMap<String, Object>();
-        }
+        initializeArgs();
         args.put(key, value);
         return this;
     }
+    
+    /**
+     * Allow to set a parameter in freemarker template context.
+     *
+     * @param key an enum who implement the ParameterId interface
+     * @param value any object
+     * @return the current template with new parameter.
+     * @see org.nuxeo.ecm.webengine.model.impl.ParameterId
+     */
+    public Template arg(ParameterId key, Object value){
+        initializeArgs();
+        args.put(key.getID(), value);
+        return this;
+    }
 
+    /**
+     * Allow to initialize args Map if it's null.
+     */
+    protected void initializeArgs(){
+        if (args == null) {
+            args = new HashMap<String, Object>();
+        }
+    }
+    
     public Template args(Map<String, Object> args) {
         this.args = args;
         return this;
